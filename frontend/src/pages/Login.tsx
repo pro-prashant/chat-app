@@ -1,30 +1,34 @@
 import { useContext } from "react";
-import AuthDataContextProvider, { AuthDataContext } from "../context/authContext";
+import { AuthDataContext } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-
-
-
-
 const Login = () => {
-   const navigate = useNavigate();
-     const {handleLogin,email,password,setEmail,setPassword}  = useContext(AuthDataContext);
-const handleSubmit = (e:React.FormEvent)=>{
-           try{
-              e.preventDefault();
-            handleLogin();
-            toast.success("Login Successfully");
-            navigate("/profile");
-            console.log("click")
-           }catch(error){
-               toast.error("Login Error");
-           }
+  const navigate = useNavigate();
+  const { handleLogin, email, password, setEmail, setPassword } = useContext(AuthDataContext);
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-}
+    // Check minimum password length
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
 
-   
+    try {
+      const success = await handleLogin(); // make sure handleLogin returns true/false
+      if (success) {
+        toast.success("Login Successful");
+        navigate("/"); // redirect after successful login
+      } else {
+        toast.error("Invalid email or password");
+      }
+    } catch (error) {
+      toast.error("Login Error");
+      console.error(error);
+    }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 via-cyan-500 to-blue-600">
@@ -39,8 +43,9 @@ const handleSubmit = (e:React.FormEvent)=>{
               type="email"
               placeholder="Enter your email"
               value={email}
-              onChange={(e)=>setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
               className="px-4 py-2 rounded-md bg-white/20 border border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-300 text-white placeholder-gray-300 transition-all duration-300"
+              required
             />
           </div>
 
@@ -51,8 +56,9 @@ const handleSubmit = (e:React.FormEvent)=>{
               type="password"
               placeholder="Enter your password"
               value={password}
-              onChange={(e)=>setPassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
               className="px-4 py-2 rounded-md bg-white/20 border border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-300 text-white placeholder-gray-300 transition-all duration-300"
+              required
             />
           </div>
 
@@ -67,7 +73,12 @@ const handleSubmit = (e:React.FormEvent)=>{
 
         <p className="text-center text-sm mt-4 text-gray-200">
           Don’t have an account?{" "}
-          <span className="text-cyan-300 hover:underline cursor-pointer" onClick={()=>navigate("/signup")}>Sign Up</span>
+          <span
+            className="text-cyan-300 hover:underline cursor-pointer"
+            onClick={() => navigate("/signup")}
+          >
+            Sign Up
+          </span>
         </p>
       </div>
     </div>

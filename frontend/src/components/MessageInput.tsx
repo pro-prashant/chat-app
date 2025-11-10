@@ -13,10 +13,7 @@ const MessageInput = () => {
   // 📸 Handle image selection
   const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setImage(file);
-      console.log("🖼️ Image selected:", file.name);
-    }
+    if (file) setImage(file);
   };
 
   // 🚀 Handle sending message
@@ -30,7 +27,7 @@ const MessageInput = () => {
         setText("");
         setImage(null);
         if (fileInputRef.current) fileInputRef.current.value = "";
-        await getMessage(selectedUser._id); // Refresh message list
+        await getMessage(selectedUser._id); // Refresh messages
       }
     } catch (error) {
       console.error("❌ Failed to send message:", error);
@@ -59,7 +56,7 @@ const MessageInput = () => {
           onChange={handleImage}
         />
 
-        {/* Message input field */}
+        {/* Message input */}
         <input
           type="text"
           placeholder="Type a message..."

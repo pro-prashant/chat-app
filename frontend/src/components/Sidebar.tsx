@@ -1,10 +1,13 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { AuthDataContext } from "../context/authContext";
 
 const Sidebar = ({ users, onUserSelect }) => {
-  const { onlineUsers } = useContext(AuthDataContext); // ✅ must be inside component
-  console.log("check user online", onlineUsers);
+  const { onlineUsers } = useContext(AuthDataContext);
+
+  useEffect(() => {
+    console.log("check user online", onlineUsers);
+  }, [onlineUsers]);
 
   return (
     <aside className="h-full w-20 lg:w-72 flex flex-col transition-all duration-200 bg-gradient-to-b from-base-200 to-base-100">
