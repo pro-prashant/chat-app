@@ -2,7 +2,21 @@ import { useContext, useEffect } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { AuthDataContext } from "../context/authContext";
 
-const Sidebar = ({ users, onUserSelect }) => {
+// ✅ Define User type (based on your MessageContext user interface)
+interface User {
+  _id: string;
+  username?: string;
+  profilepic?: string;
+  email?: string;
+}
+
+// ✅ Define props type for Sidebar
+interface SidebarProps {
+  users: User[];
+  onUserSelect: (user: User) => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ users, onUserSelect }) => {
   const { onlineUsers } = useContext(AuthDataContext);
 
   useEffect(() => {

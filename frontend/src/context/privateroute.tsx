@@ -1,26 +1,24 @@
-import { Navigate } from "react-router-dom";
 import { useContext } from "react";
+import type { ReactNode } from "react";
+import { Navigate } from "react-router-dom";
 import { AuthDataContext } from "./authContext";
 
 interface PrivateRouteProps {
-  children: JSX.Element;
+  children: ReactNode;
 }
 
 const PrivateRoute = ({ children }: PrivateRouteProps) => {
   const auth = useContext(AuthDataContext);
 
-  // Wait while fetching user info
-  if (auth.loading) {
+  if (auth?.loading) {
     return <div className="text-center mt-20 text-white">Loading...</div>;
   }
 
-  // If not logged in → redirect to login
-  if (!auth.updateProfile) {
+  if (!auth?.updateProfile) {
     return <Navigate to="/login" replace />;
   }
 
-  // If logged in → allow access
-  return children;
+  return <>{children}</>;
 };
 
 export default PrivateRoute;

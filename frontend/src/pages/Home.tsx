@@ -4,27 +4,36 @@ import Sidebar from "../components/Sidebar";
 import { MessageContext } from "../context/messageContext";
 import NoChatselected from "../components/NoChatselected";
 
+// Define a fallback User type (you can refine it later)
+interface User {
+  _id: string;
+  username: string;
+  profilepic?: string;
+}
+
 const Home = () => {
-  const { users, selectedUser, setSelectedUser } = useContext(MessageContext);
+  // Non-null assertion (!) ensures MessageContext is not null
+  const { users, selectedUser, setSelectedUser } = useContext(MessageContext)!;
 
   // Log only when users change
   useEffect(() => {
-    console.log('check user', users);
+    console.log("👥 Users list:", users);
   }, [users]);
 
   // Log only when selectedUser changes
   useEffect(() => {
-    console.log("📦 selected data:", selectedUser);
+    console.log("📦 Selected user:", selectedUser);
   }, [selectedUser]);
 
   return (
     <div className="flex flex-row min-h-screen overflow-hidden bg-base-100 rounded-lg shadow-cl w-full h-[calc(100vh-8rem)]">
-      {/* pass setSelectedUser to Sidebar */}
+      {/* Sidebar receives user list + selection handler */}
       <Sidebar users={users} onUserSelect={setSelectedUser} />
-      
+
       <main className="flex-1 bg-gray-900">
         {selectedUser ? (
-          <ChatContainer user={selectedUser} />
+          // Pass user prop safely to ChatContainer
+          <ChatContainer user={selectedUser as User} />
         ) : (
           <NoChatselected />
         )}

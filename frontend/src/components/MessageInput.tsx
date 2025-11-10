@@ -8,7 +8,11 @@ const MessageInput = () => {
   const [image, setImage] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const { selectedUser, sendMessage, getMessage } = useContext(MessageContext);
+  const messageContext = useContext(MessageContext);
+
+  if (!messageContext) return null; // ✅ prevents TS and runtime null errors
+
+  const { selectedUser, sendMessage, getMessage } = messageContext;
 
   // 📸 Handle image selection
   const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {

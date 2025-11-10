@@ -3,14 +3,20 @@ import { MessageContext } from "../context/messageContext";
 import { AuthDataContext } from "../context/authContext";
 
 const Messages = () => {
-  const { selectedUser, messages } = useContext(MessageContext);
-  const { fetchUserProfile, updateProfile } = useContext(AuthDataContext);
-  const messagesEndRef = useRef(null);
+  const messageContext = useContext(MessageContext);
+  const authContext = useContext(AuthDataContext);
+
+  // ✅ Safely handle possible null contexts
+  if (!messageContext || !authContext) return null;
+
+  const { selectedUser, messages } = messageContext;
+  const { fetchUserProfile, updateProfile } = authContext;
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   // Fetch logged-in user profile on mount
   useEffect(() => {
     fetchUserProfile();
-  }, []);
+  }, [fetchUserProfile]);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
