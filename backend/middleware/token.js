@@ -1,6 +1,3 @@
-
-const jwt = require("jsonwebtoken");
-
 const tokenGeneration = (userId, res) => {
   try {
     console.log("🟢 [tokenGeneration] Starting token creation...");
@@ -14,11 +11,12 @@ const tokenGeneration = (userId, res) => {
 
     console.log("Generated JWT Token:", token);
 
-    // Set cookie
+    // Set cookie (works for cross-origin on production)
     res.cookie("jwt", token, {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       httpOnly: true,
-      sameSite: "strict",
+      secure: true,          // ✅ must be true on HTTPS
+      sameSite: "None",      // ✅ allow cross-origin
     });
 
     console.log("✅ [tokenGeneration] Token cookie successfully set on response.");
@@ -26,5 +24,3 @@ const tokenGeneration = (userId, res) => {
     console.error("❌ [tokenGeneration] Error generating token:", error.message);
   }
 };
-
-module.exports = { tokenGeneration };
