@@ -4,12 +4,6 @@ import Sidebar from "../components/Sidebar";
 import { MessageContext } from "../context/messageContext";
 import NoChatselected from "../components/NoChatselected";
 
-interface User {
-  _id: string;
-  username: string;
-  profilepic?: string;
-}
-
 const Home = () => {
   const messageContext = useContext(MessageContext);
 
@@ -32,11 +26,7 @@ const Home = () => {
       <Sidebar users={users} onUserSelect={setSelectedUser} />
 
       <main className="flex-1 bg-gray-900">
-        {selectedUser ? (
-          <ChatContainer user={selectedUser as User} />
-        ) : (
-          <NoChatselected />
-        )}
+        {selectedUser ? <ChatContainer /> : <NoChatselected />}
       </main>
     </div>
   );
