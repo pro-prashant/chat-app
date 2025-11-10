@@ -2,30 +2,48 @@ import { useContext, useEffect, useRef } from "react";
 import { MessageContext } from "../context/messageContext";
 import { AuthDataContext } from "../context/authContext";
 
+// 🧩 Define clear interfaces for type safety
+interface User {
+  _id: string;
+  name: string;
+  profilepic?: string;
+}
+
+interface Message {
+  _id?: string;
+  senderId: string | User;
+  text?: string;
+  image?: string;
+  createdAt?: string;
+  status?: "sent" | "delivered" | "read";
+}
+
 const Messages = () => {
   const messageContext = useContext(MessageContext);
   const authContext = useContext(AuthDataContext);
 
-  // ✅ Safely handle possible null contexts
+  // ✅ Prevent rendering until both contexts are available
   if (!messageContext || !authContext) return null;
 
-  const { selectedUser, messages } = messageContext;
+  const { selectedUser, messages } = messageContext as {
+    selectedUser: User | null;
+    messages: Message[];
+  };
+
   const { fetchUserProfile, updateProfile } = authContext;
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  // Fetch logged-in user profile on mount
   useEffect(() => {
-    fetchUserProfile();
+    fetchUserProfile?.();
   }, [fetchUserProfile]);
 
-  // Auto-scroll to bottom when new messages arrive
+  // Auto-scroll when messages change
   useEffect(() => {
     if (messages?.length) {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages?.length]);
 
-  // If no user selected yet
   if (!selectedUser) {
     return (
       <div className="flex items-center justify-center h-full text-gray-500">
@@ -37,13 +55,16 @@ const Messages = () => {
   return (
     <div className="flex-1 overflow-y-auto p-4 space-y-4 rounded-md bg-white dark:bg-gray-900">
       {messages && messages.length > 0 ? (
-        [...messages].map((msg) => {
-          const isOtherUser =
-            msg.senderId === selectedUser._id ||
-            msg.senderId?._id === selectedUser._id;
+        messages.map((msg) => {
+          const senderId =
+            typeof msg.senderId === "string"
+              ? msg.senderId
+              : msg.senderId?._id;
+
+          const isOtherUser = senderId === selectedUser._id;
 
           return isOtherUser ? (
-            // Message from other user
+            // 🟣 Message from other user
             <div className="flex items-start gap-3" key={msg._id || Math.random()}>
               <img
                 src={selectedUser.profilepic || "/default-avatar.png"}
@@ -72,7 +93,7 @@ const Messages = () => {
               </div>
             </div>
           ) : (
-            // Message from logged-in user
+            // 🟢 Message from logged-in user
             <div
               className="flex items-end gap-3 justify-end"
               key={msg._id || Math.random()}
