@@ -1,10 +1,5 @@
-import {
-  createContext,
-  useState,
-  useEffect,
-  useRef,
-  ReactNode,
-} from "react";
+import { createContext, useState, useEffect, useRef } from "react";
+import type { ReactNode } from "react";
 import axios from "axios";
 import { io, Socket } from "socket.io-client";
 import { API_URL } from "../lib/utils";
@@ -22,7 +17,7 @@ export interface Message {
 // 👤 User type
 export interface User {
   _id: string;
-  username?: string; // ✅ changed from 'name' to 'username' for consistency with Sidebar
+  username?: string; // ✅ using 'username' for consistency
   email?: string;
   profilepic?: string;
 }
