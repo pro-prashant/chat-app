@@ -10,7 +10,7 @@ const userSocket = {}; // { userId: [socketIds] }
 // ✅ Use env variable for CORS origin
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: process.env.CLIENT_URL,
     credentials: true,
     methods: ["GET", "POST"],
   },
