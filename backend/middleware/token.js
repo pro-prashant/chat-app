@@ -13,12 +13,11 @@ const tokenGeneration = (userId, res) => {
 
     // Set cookie (works for cross-origin on production)
     res.cookie("jwt", token, {
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-      httpOnly: true,
-      secure: true,          // ✅ must be true on HTTPS
-      sameSite: "None",      // ✅ allow cross-origin
-    });
-
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production", // only secure on prod
+  sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+});
     console.log("✅ [tokenGeneration] Token cookie successfully set on response.");
   } catch (error) {
     console.error("❌ [tokenGeneration] Error generating token:", error.message);
